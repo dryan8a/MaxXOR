@@ -21,9 +21,33 @@ namespace MaxXOR
 
         public static int GetEfficient(int[] nums)
         {
-            int currentMax;
+            int currentMax = 0;
+            int prefix = 0;
 
-            throw new NotImplementedException();
+            HashSet<int> prefixedNums = new HashSet<int>(); //HashSet used so that duplicates aren't added
+
+            for(int bit = 30;bit >= 0;bit--)
+            {
+                prefix |= 1 << bit; //sets the current bit to 1
+
+                foreach(int num in nums)
+                {
+                    prefixedNums.Add(num & prefix); 
+                }
+
+                int potentialNewMax = currentMax | (1 << bit); 
+                foreach(int prefixedNum in prefixedNums)
+                {
+                    if(prefixedNums.Contains(potentialNewMax ^ prefixedNum))
+                    {
+                        currentMax = potentialNewMax;
+                        break;
+                    }
+                }
+                prefixedNums.Clear();
+            }
+
+            return currentMax;
         }
     }
 }
